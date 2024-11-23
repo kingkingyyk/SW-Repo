@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.1.1/dist/css/materialize.min.css">
+        <title>Software Repository</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+            .content { padding-left: 20px }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <div class="nav-wrapper" style="padding-left: 24px">
+                <a class="brand-logo">Welcome to Software Repository!</a>
+            </div>
+        </nav>
+        <div class="content">
+            {% for app in files.apps %}
+                <h5>{{ app.name }}</h5>
+                <ul>
+                {% for file in app.files %}
+                    <li><a href="/files/{{app.name}}/{{ file.split('/')[-1] }}" target="_blank">{{ file }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endfor %}
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.1.1/dist/js/materialize.min.js"></script>
+    </body>
+</html>

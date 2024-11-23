@@ -1,0 +1,5 @@
+root: <path>
+apps:
+  - name: tweaks
+    files:
+      - <relative path from root>
