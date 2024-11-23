@@ -4,8 +4,7 @@ import yaml
 
 from flask import Flask, abort, render_template, send_file
 
-with open("files.yaml", "r") as f_h:
-    files_data = yaml.safe_load(f_h.read())
+INDEX_FILE = "files.yaml"
 
 app = Flask(__name__)
 
@@ -17,6 +16,10 @@ def index():
 @app.route("/files/<string:section>/<string:file>")
 def serve_files(section: str, file: str):
     """Serve files"""
+    global INDEX_FILE
+    with open(INDEX_FILE, "r") as f_h:
+        files_data = yaml.safe_load(f_h.read())
+
     section_obj = None
     for entry in files_data["apps"]:
         if entry["name"] == section:
