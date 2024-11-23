@@ -2,10 +2,10 @@ stages:
   - package
 
 Package:
-  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27.3.1
+  image: docker:27.3.1
   stage: package
   services:
-    - docker:20.10.16-dind
+    - docker:27.3.1-dind
   variables:
     CI_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
