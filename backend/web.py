@@ -2,23 +2,34 @@ import os
 import http
 import yaml
 
+from typing import Dict
 from flask import Flask, abort, render_template, send_file
 
 INDEX_FILE = "files.yaml"
+INDEX_FILE_MTIME = 0
+FILES_DATA_LAST = None
 
 app = Flask(__name__)
+
+def load_files_data() -> Dict:
+    global INDEX_FILE
+    global INDEX_FILE_MTIME
+    global FILES_DATA_LAST
+    if INDEX_FILE_MTIME != os.path.getmtime(INDEX_FILE):
+        INDEX_FILE_MTIME = os.path.getmtime(INDEX_FILE)
+        with open(INDEX_FILE, "r") as f_h:
+            FILES_DATA_LAST = yaml.safe_load(f_h.read())
+    return FILES_DATA_LAST
 
 @app.route("/")
 def index():
     """Index page"""
-    return render_template("index.html", files=files_data)
+    return render_template("index.html", files=load_files_data())
 
 @app.route("/files/<string:section>/<string:file>")
 def serve_files(section: str, file: str):
     """Serve files"""
-    global INDEX_FILE
-    with open(INDEX_FILE, "r") as f_h:
-        files_data = yaml.safe_load(f_h.read())
+    files_data = load_files_data()
 
     section_obj = None
     for entry in files_data["apps"]:
