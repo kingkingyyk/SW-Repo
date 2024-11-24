@@ -1,11 +1,16 @@
 <html>
     <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.1.1/dist/css/materialize.min.css">
         <title>Software Repository</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <style>
-            .content { padding-left: 20px }
+            .content { padding-left: 20px; padding-top: 20px; }
+            .copyButton { cursor: pointer; }
         </style>
     </head>
     <body>
@@ -14,16 +19,42 @@
                 <a class="brand-logo">Welcome to Software Repository!</a>
             </div>
         </nav>
+
         <div class="content">
             {% for app in files.apps %}
                 <h5>{{ app.name }}</h5>
                 <ul>
                 {% for file in app.files %}
-                    <li><a href="/files/{{app.name}}/{{ file.split('/')[-1] }}" target="_blank">{{ file }}</a></li>
+                    <li>
+                        <a href="/files/{{app.name}}/{{ file.split('/')[-1] }}" target="_blank">{{ file }}</a>
+                        {% if file.split('/')[-1].endswith('.ps1') %}
+                            <i
+                                class="material-icons copyButton tooltipped waves-effect"
+                                style="font-size: 20px"
+                                data-position="right"
+                                data-tooltip="Copy command"
+                                onclick="copyCommand('/files/{{app.name}}/{{ file.split('/')[-1] }}')"
+                            >
+                                content_copy
+                            </i>
+                        {% endif %}
+                    </li>
                 {% endfor %}
                 </ul>
             {% endfor %}
         </div>
         <script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.1.1/dist/js/materialize.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.tooltipped');
+                var instances = M.Tooltip.init(elems, {});
+            });
+
+            function copyCommand(url) {
+                let fullUrl = window.location.origin + url;
+                let command = `irm ${fullUrl} | iex`;
+                navigator.clipboard.writeText(command);
+            };
+        </script>
     </body>
 </html>
